@@ -1,0 +1,18 @@
+server:
+  port: 8189
+  servlet:
+    context-path: /examinator
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
+        temp:
+          use_jdbc_metadata_defaults: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/examinator_db
+    username: postgres
+    password: admin

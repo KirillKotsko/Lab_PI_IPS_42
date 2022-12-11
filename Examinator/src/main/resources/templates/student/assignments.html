@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<title>Exam list</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" th:href="@{/fonts/material-icon/css/material-design-iconic-font.min.css}">
+	
+	<link rel="stylesheet" type="text/css" th:href="@{/vendor/animate/animate.css}">
+	
+	<link rel="stylesheet" type="text/css" th:href="@{/vendor/select2/select2.min.css}">
+	
+	<link rel="stylesheet" type="text/css" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}">
+	
+	<link rel="stylesheet" type="text/css" th:href="@{/css/exam_list.css}">
+	
+	<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+	
+	<meta name="robots" content="noindex, follow">
+	<script nonce="da874f92-1724-4ed3-8019-cd27abe77b07">(function(w,d){!function(a,e,t,r){a.zarazData=a.zarazData||{},a.zarazData.executed=[],a.zaraz={deferred:[]},a.zaraz.q=[],a.zaraz._f=function(e){return function(){var t=Array.prototype.slice.call(arguments);a.zaraz.q.push({m:e,a:t})}};for(const e of["track","set","ecommerce","debug"])a.zaraz[e]=a.zaraz._f(e);a.addEventListener("DOMContentLoaded",(()=>{var t=e.getElementsByTagName(r)[0],z=e.createElement(r),n=e.getElementsByTagName("title")[0];for(n&&(a.zarazData.t=e.getElementsByTagName("title")[0].text),a.zarazData.x=Math.random(),a.zarazData.w=a.screen.width,a.zarazData.h=a.screen.height,a.zarazData.j=a.innerHeight,a.zarazData.e=a.innerWidth,a.zarazData.l=a.location.href,a.zarazData.r=e.referrer,a.zarazData.k=a.screen.colorDepth,a.zarazData.n=e.characterSet,a.zarazData.o=(new Date).getTimezoneOffset(),a.zarazData.q=[];a.zaraz.q.length;){const e=a.zaraz.q.shift();a.zarazData.q.push(e)}z.defer=!0;for(const e of[localStorage,sessionStorage])Object.keys(e).filter((a=>a.startsWith("_zaraz_"))).forEach((t=>{try{a.zarazData["z_"+t.slice(7)]=JSON.parse(e.getItem(t))}catch{a.zarazData["z_"+t.slice(7)]=e.getItem(t)}}));z.referrerPolicy="origin",z.src="/cdn-cgi/zaraz/s.js?z="+btoa(encodeURIComponent(JSON.stringify(a.zarazData))),t.parentNode.insertBefore(z,t)}))}(w,d,0,"script");})(window,document);</script></head>
+<body>
+	<div class="header">
+		<div>
+			<a th:href="@{/}" class="header_a">
+				<img th:src="@{/images/main_svg.svg}" class="emblema">
+			</a>
+		</div>
+		<div class="header_hover" sec:authorize="hasRole('ADMIN')">
+			<a th:href="@{/admin/list}" class="header_a headers_add">User manager</a>
+		</div>
+		<div class="header_hover" sec:authorize="hasAnyRole('ADMIN', 'TEACHER')">
+			<a th:href="@{/exam}" class="header_a headers_add">Exam manager</a>
+		</div>
+		<div class="header_hover" sec:authorize="hasAnyRole('ADMIN', 'TEACHER')">
+			<a th:href="@{/teacher/list}" class="header_a headers_add">Students</a>
+		</div>
+		<div class="header_hover" sec:authorize="hasRole('STUDENT')">
+			<a th:href="@{/student/assignments}" class="header_a headers_add">Assignment</a>
+		</div>
+		<div class="header_hover" sec:authorize="hasAnyRole('STUDENT', 'ADMIN', 'TEACHER')">
+			<a th:href="@{/profile}" class="header_a headers_add">Profile</a>
+		</div>
+		<div style="margin-left: auto;">
+			<a th:href="@{/logout}" class="header_a">
+				<img th:src="@{/images/exit.svg}" class="emblema_exit">
+			</a>
+		</div>
+	</div>
+	
+	<h1 class="main_header">Assignments</h1>
+	<hr style="width: 900px; margin-left:auto; margin-right:auto;">
+	<div style="width: 950px; margin:auto;     background: #fff;  padding: 10px; border-radius: 15px;">
+		<table>
+			<tbody>
+				<tr th:each="x, state : ${assignments}">
+					<td th:utext="${x.exam.name}"></td>
+					<td th:utext="${x.exam.subject.getTitle()}"></td>
+					<td>
+						<img th:if="${x.exam.level.getLevel() eq 'Low'}" th:src="@{/images/star1.png}">
+						<img th:if="${x.exam.level.getLevel() eq 'Medium'}" th:src="@{/images/star2.png}">
+						<img th:if="${x.exam.level.getLevel() eq 'High'}" th:src="@{/images/star3.png}">
+					</td>
+					<td th:utext="${x.exam.duration} + ' min'"></td>
+					<td th:utext="${x.description}"></td>
+					<td><a class="btn btn-outline-warning" th:href="@{/student/pass/{id}(id=${x.exam.id})}">Pass</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>
